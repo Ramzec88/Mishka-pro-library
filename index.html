@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Кладовая педагога — Мишка Макс</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --core:         #FF7A3D;
+    --main:         #D4876D;
+    --light-ter:    #E6A48C;
+    --dark-ter:     #C17255;
+    --companion:    #7B9BA8;
+    --bg:           #FFF8F5;
+    --white:        #ffffff;
+    --text-main:    #3D2E28;
+    --text-muted:   #A08878;
+    --border:       #F0E4DC;
+    --shadow:       0 2px 16px rgba(193,114,85,0.10);
+    --shadow-hover: 0 8px 32px rgba(193,114,85,0.20);
+    /* backward-compat aliases */
+    --navy:      var(--main);
+    --gold:      var(--core);
+    --gold-dark: #e86a28;
+    --cream:     var(--bg);
+    --accent2:   var(--companion);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Rubik', sans-serif;
+    background: var(--cream);
+    color: var(--text-main);
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--main);
+    padding: 20px 20px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .bear-avatar {
+    width: 48px; height: 48px;
+    background: var(--white);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .header-title {
+    flex: 1;
+  }
+
+  .header-title h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+  }
+
+  .header-title p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+  }
+
+  /* STATS STRIP */
+  .stats-strip {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 20px;
+  }
+
+  .stat-pill {
+    background: rgba(255,255,255,0.20);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 10px 14px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .stat-pill .num {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--white);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-pill .lbl {
+    font-size: 10px;
+    color: rgba(255,255,255,0.75);
+    display: block;
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  /* TABS */
+  .tabs-wrap {
+    background: var(--main);
+    padding: 0 20px;
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid rgba(255,255,255,0.15);
+  }
+
+  .tab {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.60);
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .tab.active {
+    color: var(--white);
+    border-bottom-color: var(--white);
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    padding: 16px 20px 0;
+  }
+
+  .search-box {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .search-box svg { flex-shrink: 0; opacity: 0.4; }
+
+  .search-box input {
+    border: none; outline: none;
+    font-family: 'Rubik', sans-serif;
+    font-size: 14px;
+    color: var(--text-main);
+    background: transparent;
+    width: 100%;
+  }
+
+  .search-box input::placeholder { color: var(--text-muted); }
+
+  /* FILTER CHIPS */
+  .chips-wrap {
+    padding: 12px 20px 0;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chips-wrap::-webkit-scrollbar { display: none; }
+
+  .chip {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.18s;
+    flex-shrink: 0;
+  }
+
+  .chip.active {
+    background: var(--core);
+    border-color: var(--core);
+    color: var(--white);
+  }
+
+  .chip:hover:not(.active) {
+    border-color: var(--main);
+    color: var(--main);
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    padding: 18px 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-label h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+
+  .section-label span {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* CATEGORY CARDS */
+  .categories {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 100px;
+  }
+
+  .cat-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1.5px solid transparent;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .cat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--core);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .cat-card:nth-child(1) { animation-delay: 0.05s; }
+  .cat-card:nth-child(2) { animation-delay: 0.10s; }
+  .cat-card:nth-child(3) { animation-delay: 0.15s; }
+  .cat-card:nth-child(4) { animation-delay: 0.20s; }
+
+  .cat-icon {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .cat-body { flex: 1; min-width: 0; }
+
+  .cat-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 3px;
+  }
+
+  .cat-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cat-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .cat-count {
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--dark-ter);
+    line-height: 1;
+  }
+
+  .cat-count-label {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .new-badge {
+    background: var(--companion);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .arrow-icon {
+    color: var(--text-muted);
+    opacity: 0.4;
+    font-size: 16px;
+  }
+
+  /* POST LIST VIEW */
+  .posts-list {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 100px;
+  }
+
+  .post-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.18s;
+    border: 1.5px solid transparent;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .post-card:hover {
+    border-color: var(--core);
+    transform: translateX(3px);
+  }
+
+  .post-type-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .post-info { flex: 1; min-width: 0; }
+
+  .post-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .tag-chip {
+    background: var(--cream);
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 6px;
+  }
+
+  .post-date {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .post-new {
+    background: var(--companion);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+
+  .post-link-icon {
+    color: var(--text-muted);
+    opacity: 0.35;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  /* BACK BUTTON */
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 20px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+  }
+  .back-btn:hover { opacity: 0.7; }
+
+  /* SUBSCRIBE BANNER (bottom fixed) */
+  .subscribe-bar {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    padding: 12px 20px 20px;
+    background: linear-gradient(to top, #FFF8F5 80%, transparent);
+    z-index: 100;
+  }
+
+  .subscribe-btn {
+    background: var(--core);
+    color: var(--white);
+    border: none;
+    border-radius: 16px;
+    width: 100%;
+    padding: 15px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(255,122,61,0.40);
+    transition: all 0.2s;
+    letter-spacing: -0.2px;
+  }
+
+  .subscribe-btn:hover {
+    background: #e86a28;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(255,122,61,0.50);
+  }
+
+  .subscribe-btn:active {
+    transform: scale(0.98);
+  }
+
+  .subscribe-sub {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* HIDDEN VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER (always visible) -->
+<div class="header">
+  <div class="header-top">
+    <div class="bear-avatar">🐻</div>
+    <div class="header-title">
+      <h1>Кладовая педагога</h1>
+      <p>Мишка Макс · Материалы для занятий</p>
+    </div>
+  </div>
+  <div class="stats-strip">
+    <div class="stat-pill">
+      <span class="num">63</span>
+      <span class="lbl">материала</span>
+    </div>
+    <div class="stat-pill">
+      <span class="num">4</span>
+      <span class="lbl">рубрики</span>
+    </div>
+    <div class="stat-pill">
+      <span class="num">8</span>
+      <span class="lbl">новинок</span>
+    </div>
+  </div>
+  <div class="tabs-wrap">
+    <div class="tab active" onclick="switchTab('categories', this)">Рубрики</div>
+    <div class="tab" onclick="switchTab('all', this)">Все материалы</div>
+    <div class="tab" onclick="switchTab('new', this)">Новинки 🔥</div>
+  </div>
+</div>
+
+<!-- VIEW: CATEGORIES -->
+<div id="view-categories" class="view active">
+  <div class="section-label">
+    <h2>Выберите рубрику</h2>
+    <span>4 раздела</span>
+  </div>
+  <div class="categories">
+
+    <div class="cat-card" onclick="openCategory('songs')">
+      <div class="cat-icon" style="background:#FDEEE8;">🎵</div>
+      <div class="cat-body">
+        <div class="cat-name">Песни</div>
+        <div class="cat-desc">Авторские и народные · аудио</div>
+      </div>
+      <div class="cat-right">
+        <div class="cat-count">27</div>
+        <div class="cat-count-label">материалов</div>
+        <span class="new-badge">+3 новых</span>
+      </div>
+    </div>
+
+    <div class="cat-card" onclick="openCategory('scenarios')">
+      <div class="cat-icon" style="background:#E8EFF2;">📋</div>
+      <div class="cat-body">
+        <div class="cat-name">Сценарии</div>
+        <div class="cat-desc">Праздники, занятия, утренники</div>
+      </div>
+      <div class="cat-right">
+        <div class="cat-count">18</div>
+        <div class="cat-count-label">материалов</div>
+        <span class="new-badge">+2 новых</span>
+      </div>
+    </div>
+
+    <div class="cat-card" onclick="openCategory('materials')">
+      <div class="cat-icon" style="background:#F5EDE8;">📄</div>
+      <div class="cat-body">
+        <div class="cat-name">Материалы</div>
+        <div class="cat-desc">Дидактика, карточки, шаблоны</div>
+      </div>
+      <div class="cat-right">
+        <div class="cat-count">12</div>
+        <div class="cat-count-label">материалов</div>
+      </div>
+    </div>
+
+    <div class="cat-card" onclick="openCategory('games')">
+      <div class="cat-icon" style="background:#FFF0E8;">🎮</div>
+      <div class="cat-body">
+        <div class="cat-name">Игры и разминки</div>
+        <div class="cat-desc">Физминутки, пальчиковые, логика</div>
+      </div>
+      <div class="cat-right">
+        <div class="cat-count">6</div>
+        <div class="cat-count-label">материалов</div>
+        <span class="new-badge">+3 новых</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- VIEW: ALL MATERIALS -->
+<div id="view-all" class="view">
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A2E4A" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Поиск по названию или тегу…" oninput="filterPosts(this.value)" />
+    </div>
+  </div>
+  <div class="chips-wrap">
+    <div class="chip active" onclick="filterByChip(this, '')">Все</div>
+    <div class="chip" onclick="filterByChip(this, 'audio')">🎵 Аудио</div>
+    <div class="chip" onclick="filterByChip(this, 'document')">📄 Документы</div>
+    <div class="chip" onclick="filterByChip(this, 'photo')">🖼 Картинки</div>
+    <div class="chip" onclick="filterByChip(this, 'new')">🔥 Новинки</div>
+  </div>
+  <div class="section-label">
+    <h2>Все материалы</h2>
+    <span id="post-count">63 материала</span>
+  </div>
+  <div class="posts-list" id="posts-container"></div>
+</div>
+
+<!-- VIEW: NEW ONLY -->
+<div id="view-new" class="view">
+  <div class="section-label">
+    <h2>Свежие материалы</h2>
+    <span>за последние 14 дней</span>
+  </div>
+  <div class="posts-list" id="new-container"></div>
+</div>
+
+<!-- VIEW: CATEGORY DETAIL -->
+<div id="view-category-detail" class="view">
+  <div class="back-btn" onclick="closeCategory()">← <span id="cat-back-label">Назад</span></div>
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A2E4A" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Поиск в рубрике…" oninput="filterCatPosts(this.value)" />
+    </div>
+  </div>
+  <div class="section-label">
+    <h2 id="cat-title">Песни</h2>
+    <span id="cat-count">27 материалов</span>
+  </div>
+  <div class="posts-list" id="cat-posts-container"></div>
+</div>
+
+<!-- SUBSCRIBE BAR -->
+<div class="subscribe-bar">
+  <button class="subscribe-btn" onclick="handleSubscribe()">
+    🎓 Оформить подписку — 260 ₽/мес
+  </button>
+  <div class="subscribe-sub">Полный доступ ко всем 63 материалам</div>
+</div>
+
+<script>
+// ---- MOCK DATA ----
+const POSTS = [
+  { id:1, title:'Песня «Мама» — 8 Марта', role:'main_song', file_type:'audio', tags:['#песня','#мама','#8марта'], created_at:'2025-03-05', source_link:'https://t.me/+example', isNew:true },
+  { id:2, title:'Масленица: народные гуляния', role:'main_song', file_type:'audio', tags:['#песня','#масленица','#народные'], created_at:'2025-02-28', source_link:'https://t.me/+example', isNew:true },
+  { id:3, title:'Топотушки — новогодняя', role:'main_song', file_type:'audio', tags:['#песня','#новыйгод','#топотушки'], created_at:'2025-01-10', source_link:'https://t.me/+example', isNew:false },
+  { id:4, title:'Песня на 8 марта для малышей', role:'main_song', file_type:'audio', tags:['#песня','#8марта','#мама'], created_at:'2025-03-01', source_link:'https://t.me/+example', isNew:true },
+  { id:5, title:'Частушки на Новый год', role:'main_song', file_type:'audio', tags:['#песня','#новыйгод','#частушки'], created_at:'2024-12-20', source_link:'https://t.me/+example', isNew:false },
+  { id:6, title:'Сценарий: зима и животные', role:'scenario', file_type:'document', tags:['#сценарий','#зима','#животные'], created_at:'2025-02-15', source_link:'https://t.me/+example', isNew:true },
+  { id:7, title:'Сценарий 23 февраля', role:'scenario', file_type:'document', tags:['#сценарий','#23февраля'], created_at:'2025-02-20', source_link:'https://t.me/+example', isNew:true },
+  { id:8, title:'Сценарий 8 марта для средней группы', role:'scenario', file_type:'document', tags:['#сценарий','#8марта'], created_at:'2025-03-03', source_link:'https://t.me/+example', isNew:true },
+  { id:9, title:'Занятие «Геометрические фигуры»', role:'scenario', file_type:'document', tags:['#сценарий','#занятие','#фигуры'], created_at:'2025-01-25', source_link:'https://t.me/+example', isNew:false },
+  { id:10, title:'Занятие «Счёт до 5»', role:'scenario', file_type:'document', tags:['#сценарий','#счет','#занятие'], created_at:'2025-01-30', source_link:'https://t.me/+example', isNew:false },
+  { id:11, title:'Дидактические карточки: буквы А-Е', role:'material', file_type:'document', tags:['#материал','#буквы','#дидактика'], created_at:'2024-12-10', source_link:'https://t.me/+example', isNew:false },
+  { id:12, title:'Шаблон родительского уголка', role:'material', file_type:'document', tags:['#материал','#шаблон'], created_at:'2025-02-05', source_link:'https://t.me/+example', isNew:false },
+  { id:13, title:'Физминутка «Зарядка с Мишкой»', role:'game', file_type:'audio', tags:['#игра','#разминка','#физминутка'], created_at:'2025-03-07', source_link:'https://t.me/+example', isNew:true },
+  { id:14, title:'Пальчиковая игра «Пальчики-друзья»', role:'game', file_type:'audio', tags:['#игра','#пальчиковая'], created_at:'2025-03-08', source_link:'https://t.me/+example', isNew:true },
+  { id:15, title:'Логическая игра «Найди пару»', role:'game', file_type:'photo', tags:['#игра','#логика'], created_at:'2025-03-06', source_link:'https://t.me/+example', isNew:true },
+];
+
+const CAT_MAP = {
+  songs:     { title:'Песни',          roles:['main_song'], icon:'🎵' },
+  scenarios: { title:'Сценарии',       roles:['scenario'],  icon:'📋' },
+  materials: { title:'Материалы',      roles:['material'],  icon:'📄' },
+  games:     { title:'Игры и разминки',roles:['game'],      icon:'🎮' },
+};
+
+const FILE_ICONS = { audio:'🎵', document:'📄', photo:'🖼️' };
+const FILE_COLORS = { audio:'#FDEEE8', document:'#E8EFF2', photo:'#F5EDE8' };
+
+let currentCat = null;
+let activeChipFilter = '';
+let currentView = 'categories';
+
+function postHTML(p) {
+  const icon = FILE_ICONS[p.file_type] || '📎';
+  const bg = FILE_COLORS[p.file_type] || '#f5f5f5';
+  const tagsHTML = p.tags.slice(0,2).map(t => `<span class="tag-chip">${t}</span>`).join('');
+  const newBadge = p.isNew ? '<span class="post-new">NEW</span>' : '';
+  const date = new Date(p.created_at).toLocaleDateString('ru-RU', {day:'numeric', month:'short'});
+  return `
+    <div class="post-card" onclick="openPost('${p.source_link}')">
+      <div class="post-type-icon" style="background:${bg}">${icon}</div>
+      <div class="post-info">
+        <div class="post-title">${p.title}</div>
+        <div class="post-meta">${tagsHTML}<span class="post-date">${date}</span>${newBadge}</div>
+      </div>
+      <div class="post-link-icon">→</div>
+    </div>`;
+}
+
+function renderPosts(container, list) {
+  const el = document.getElementById(container);
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state"><div class="emoji">🔍</div><p>Ничего не найдено</p></div>`;
+    return;
+  }
+  el.innerHTML = list.map(postHTML).join('');
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  ['categories','all','new'].forEach(v => {
+    const view = document.getElementById(`view-${v}`);
+    if (view) view.classList.remove('active');
+  });
+  document.getElementById(`view-${tab}`).classList.add('active');
+  document.getElementById('view-category-detail').classList.remove('active');
+  currentView = tab;
+
+  if (tab === 'all') {
+    renderPosts('posts-container', POSTS.filter(p => p.role !== 'cover'));
+    document.getElementById('post-count').textContent = `${POSTS.filter(p=>p.role!=='cover').length} материалов`;
+  }
+  if (tab === 'new') {
+    const newPosts = POSTS.filter(p => p.isNew && p.role !== 'cover');
+    renderPosts('new-container', newPosts);
+  }
+}
+
+function openCategory(catKey) {
+  currentCat = catKey;
+  const cat = CAT_MAP[catKey];
+  const filtered = POSTS.filter(p => cat.roles.includes(p.role));
+
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-category-detail').classList.add('active');
+
+  document.getElementById('cat-title').textContent = `${cat.icon} ${cat.title}`;
+  document.getElementById('cat-count').textContent = `${filtered.length} материалов`;
+  document.getElementById('cat-back-label').textContent = 'Все рубрики';
+  renderPosts('cat-posts-container', filtered);
+}
+
+function closeCategory() {
+  document.getElementById('view-category-detail').classList.remove('active');
+  document.getElementById('view-categories').classList.add('active');
+  currentView = 'categories';
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===0));
+}
+
+function filterPosts(query) {
+  const q = query.toLowerCase();
+  let filtered = POSTS.filter(p => p.role !== 'cover');
+  if (activeChipFilter === 'new') filtered = filtered.filter(p => p.isNew);
+  else if (activeChipFilter) filtered = filtered.filter(p => p.file_type === activeChipFilter);
+  if (q) filtered = filtered.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    p.tags.some(t => t.toLowerCase().includes(q))
+  );
+  renderPosts('posts-container', filtered);
+  document.getElementById('post-count').textContent = `${filtered.length} материалов`;
+}
+
+function filterByChip(el, filter) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeChipFilter = filter;
+  filterPosts(document.querySelector('#view-all input').value);
+}
+
+function filterCatPosts(query) {
+  const q = query.toLowerCase();
+  const cat = CAT_MAP[currentCat];
+  let filtered = POSTS.filter(p => cat.roles.includes(p.role));
+  if (q) filtered = filtered.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    p.tags.some(t => t.toLowerCase().includes(q))
+  );
+  renderPosts('cat-posts-container', filtered);
+}
+
+function openPost(link) {
+  alert('→ Откроется в Telegram:\n' + link + '\n\n(В реальном приложении откроет канал)');
+}
+
+function handleSubscribe() {
+  alert('→ Переход к оформлению подписки\n260 ₽/месяц · Полный доступ');
+}
+</script>
+</body>
+</html>
