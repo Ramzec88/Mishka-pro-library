@@ -38,12 +38,16 @@
     margin: 0 auto;
     position: relative;
     overflow-x: hidden;
+    /* Telegram safe area — левый/правый край */
+    padding-left:  env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
   /* HEADER */
   .header {
     background: var(--main);
-    padding: 20px 20px 0;
+    /* Telegram safe area — верхний отступ (notch/Dynamic Island) */
+    padding: calc(20px + env(safe-area-inset-top)) 20px 0;
     position: relative;
     overflow: hidden;
   }
@@ -435,7 +439,8 @@
     bottom: 0; left: 50%;
     transform: translateX(-50%);
     width: 100%; max-width: 480px;
-    padding: 12px 20px 20px;
+    /* Telegram safe area — нижний отступ (home indicator на iPhone) */
+    padding: 12px 20px max(20px, env(safe-area-inset-bottom));
     background: linear-gradient(to top, #FFF8F5 80%, transparent);
     z-index: 100;
   }
@@ -946,6 +951,9 @@ function switchTab(tab, el) {
   document.getElementById('view-category-detail').classList.remove('active');
   currentView = tab;
 
+  // Скрываем Telegram BackButton при смене таба
+  if (tg?.BackButton) tg.BackButton.hide();
+
   const visible = POSTS.filter(p => p.role !== 'cover');
 
   if (tab === 'all') {
@@ -977,10 +985,16 @@ function openCategory(role) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-category-detail').classList.add('active');
 
-  document.getElementById('cat-title').textContent     = `${meta.icon} ${meta.title}`;
-  document.getElementById('cat-count').textContent     = pluralMat(filtered.length);
+  document.getElementById('cat-title').textContent      = `${meta.icon} ${meta.title}`;
+  document.getElementById('cat-count').textContent      = pluralMat(filtered.length);
   document.getElementById('cat-back-label').textContent = 'Все рубрики';
   renderPosts('cat-posts-container', filtered);
+
+  // Telegram BackButton
+  if (tg?.BackButton) {
+    tg.BackButton.show();
+    tg.BackButton.onClick(closeCategory);
+  }
 }
 
 function closeCategory() {
@@ -988,6 +1002,9 @@ function closeCategory() {
   document.getElementById('view-categories').classList.add('active');
   currentView = 'categories';
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+
+  // Telegram BackButton
+  if (tg?.BackButton) tg.BackButton.hide();
 }
 
 // ============================================================
