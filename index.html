@@ -420,6 +420,31 @@
     margin-top: 2px;
   }
 
+  /* GROUPED CARD FILES */
+  .post-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .file-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--cream);
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .file-btn:hover { background: #eed9cc; }
+
   /* BACK BUTTON */
   .back-btn {
     display: flex;
@@ -932,21 +957,68 @@ function showError(message) {
 // ============================================================
 //  POST RENDERING
 // ============================================================
-function postHTML(p) {
-  const icon      = FILE_ICONS[p.file_type]  || '📎';
-  const bg        = FILE_COLORS[p.file_type] || '#f5f5f5';
-  const tagsHTML  = p.tags.slice(0, 2).map(t => `<span class="tag-chip">${t}</span>`).join('');
-  const newBadge  = p.isNew ? '<span class="post-new">NEW</span>' : '';
-  const date      = new Date(p.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-  const link      = p.source_link || '';
+function groupPosts(list) {
+  const groups = [];
+  const map = new Map();
+  list.forEach(p => {
+    const gid = p.lesson_group_id;
+    if (gid) {
+      if (!map.has(gid)) { map.set(gid, []); groups.push(map.get(gid)); }
+      map.get(gid).push(p);
+    } else {
+      groups.push([p]);
+    }
+  });
+  return groups;
+}
+
+function fileBtnLabel(p, siblings) {
+  const typeLabels = { audio: 'Аудио', document: 'Текст', photo: 'Фото' };
+  const base = typeLabels[p.file_type] || p.file_type || 'Файл';
+  const sameType = siblings.filter(s => s.file_type === p.file_type);
+  if (sameType.length > 1) {
+    const idx = sameType.indexOf(p) + 1;
+    return `${base} ${idx}`;
+  }
+  return base;
+}
+
+function postHTML(items) {
+  const p        = items[0];
+  const icon     = FILE_ICONS[p.file_type]  || '📎';
+  const bg       = FILE_COLORS[p.file_type] || '#f5f5f5';
+  const tagsHTML = p.tags.slice(0, 2).map(t => `<span class="tag-chip">${t}</span>`).join('');
+  const newBadge = items.some(x => x.isNew) ? '<span class="post-new">NEW</span>' : '';
+  const date     = new Date(p.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+
+  if (items.length === 1) {
+    const link = p.source_link || '';
+    return `
+      <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link)">
+        <div class="post-type-icon" style="background:${bg}">${icon}</div>
+        <div class="post-info">
+          <div class="post-title">${p.title}</div>
+          <div class="post-meta">${tagsHTML}<span class="post-date">${date}</span>${newBadge}</div>
+        </div>
+        <div class="post-link-icon">→</div>
+      </div>`;
+  }
+
+  const btns = items.map(f => {
+    const ficon  = FILE_ICONS[f.file_type] || '📎';
+    const label  = fileBtnLabel(f, items);
+    const flink  = (f.source_link || '').replace(/"/g, '&quot;');
+    return `<button class="file-btn" onclick="event.stopPropagation();openPost('${flink}')">${ficon} ${label}</button>`;
+  }).join('');
+
   return `
-    <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link)">
+    <div class="post-card">
       <div class="post-type-icon" style="background:${bg}">${icon}</div>
       <div class="post-info">
         <div class="post-title">${p.title}</div>
         <div class="post-meta">${tagsHTML}<span class="post-date">${date}</span>${newBadge}</div>
+        <div class="post-files">${btns}</div>
       </div>
-      <div class="post-link-icon">→</div>
     </div>`;
 }
 
@@ -956,7 +1028,7 @@ function renderPosts(containerId, list) {
     el.innerHTML = `<div class="empty-state"><div class="emoji">🔍</div><p>Ничего не найдено</p></div>`;
     return;
   }
-  el.innerHTML = list.map(postHTML).join('');
+  el.innerHTML = groupPosts(list).map(postHTML).join('');
 }
 
 // ============================================================
