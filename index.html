@@ -691,15 +691,15 @@
   <div class="stats-strip">
     <div class="stat-pill">
       <span class="num" id="stat-total">—</span>
-      <span class="lbl">материала</span>
+      <span class="lbl" id="lbl-total">материалов</span>
     </div>
     <div class="stat-pill">
       <span class="num" id="stat-cats">—</span>
-      <span class="lbl">рубрики</span>
+      <span class="lbl" id="lbl-cats">рубрик</span>
     </div>
     <div class="stat-pill">
       <span class="num" id="stat-new">—</span>
-      <span class="lbl">новинок</span>
+      <span class="lbl" id="lbl-new">новинок</span>
     </div>
   </div>
   <div class="tabs-wrap">
@@ -822,12 +822,17 @@ function isNewPost(created_at) {
   return diffMs / (1000 * 60 * 60 * 24) <= NEW_DAYS;
 }
 
-function pluralMat(n) {
+// plural(5, ['материал','материала','материалов']) → 'материалов'
+function plural(n, [one, few, many]) {
   const mod10 = n % 10, mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return `${n} материалов`;
-  if (mod10 === 1) return `${n} материал`;
-  if (mod10 >= 2 && mod10 <= 4) return `${n} материала`;
-  return `${n} материалов`;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+}
+
+function pluralMat(n) {
+  return `${n} ${plural(n, ['материал','материала','материалов'])}`;
 }
 
 // ============================================================
@@ -940,8 +945,11 @@ function renderAll() {
 
   // Stats strip
   document.getElementById('stat-total').textContent = visible.length;
+  document.getElementById('lbl-total').textContent  = plural(visible.length, ['материал','материала','материалов']);
   document.getElementById('stat-cats').textContent  = roles.length;
+  document.getElementById('lbl-cats').textContent   = plural(roles.length, ['рубрика','рубрики','рубрик']);
   document.getElementById('stat-new').textContent   = newCount;
+  document.getElementById('lbl-new').textContent    = plural(newCount, ['новинка','новинки','новинок']);
 
   // Subscribe bar
   document.getElementById('subscribe-sub').textContent =
@@ -961,7 +969,7 @@ function renderAll() {
 // ---- CATEGORIES ----
 function renderCategories(roles, posts) {
   const container = document.getElementById('categories-container');
-  document.getElementById('cats-count-label').textContent = `${roles.length} разделов`;
+  document.getElementById('cats-count-label').textContent = `${roles.length} ${plural(roles.length, ['раздел','раздела','разделов'])}`;
 
   if (!roles.length) {
     container.innerHTML = `<div class="empty-state"><div class="emoji">📭</div><p>Материалы не найдены</p></div>`;
@@ -983,7 +991,7 @@ function renderCategories(roles, posts) {
         </div>
         <div class="cat-right">
           <div class="cat-count">${rolePosts.length}</div>
-          <div class="cat-count-label">материалов</div>
+          <div class="cat-count-label">${plural(rolePosts.length, ['материал','материала','материалов'])}</div>
           ${newBadge}
         </div>
       </div>`;
