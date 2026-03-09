@@ -19,7 +19,6 @@
     --border:       #F0E4DC;
     --shadow:       0 2px 16px rgba(193,114,85,0.10);
     --shadow-hover: 0 8px 32px rgba(193,114,85,0.20);
-    /* backward-compat aliases */
     --navy:      var(--main);
     --gold:      var(--core);
     --gold-dark: #e86a28;
@@ -74,9 +73,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
 
-  .header-title {
-    flex: 1;
-  }
+  .header-title { flex: 1; }
 
   .header-title h1 {
     font-family: 'Nunito', sans-serif;
@@ -116,6 +113,7 @@
     color: var(--white);
     display: block;
     line-height: 1;
+    transition: all 0.3s;
   }
 
   .stat-pill .lbl {
@@ -154,9 +152,7 @@
   }
 
   /* SEARCH */
-  .search-wrap {
-    padding: 16px 20px 0;
-  }
+  .search-wrap { padding: 16px 20px 0; }
 
   .search-box {
     background: var(--white);
@@ -270,11 +266,6 @@
     from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
-  .cat-card:nth-child(1) { animation-delay: 0.05s; }
-  .cat-card:nth-child(2) { animation-delay: 0.10s; }
-  .cat-card:nth-child(3) { animation-delay: 0.15s; }
-  .cat-card:nth-child(4) { animation-delay: 0.20s; }
 
   .cat-icon {
     width: 52px; height: 52px;
@@ -437,7 +428,7 @@
   }
   .back-btn:hover { opacity: 0.7; }
 
-  /* SUBSCRIBE BANNER (bottom fixed) */
+  /* SUBSCRIBE BANNER */
   .subscribe-bar {
     position: fixed;
     bottom: 0; left: 50%;
@@ -474,9 +465,7 @@
     box-shadow: 0 6px 24px rgba(255,122,61,0.50);
   }
 
-  .subscribe-btn:active {
-    transform: scale(0.98);
-  }
+  .subscribe-btn:active { transform: scale(0.98); }
 
   .subscribe-sub {
     text-align: center;
@@ -497,6 +486,121 @@
   }
   .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
   .empty-state p { font-size: 14px; }
+
+  /* SKELETON LOADING */
+  @keyframes shimmer {
+    0%   { background-position: -468px 0; }
+    100% { background-position:  468px 0; }
+  }
+
+  .skeleton-card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .skeleton-card.post {
+    border-radius: 14px;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .skeleton-block {
+    background: linear-gradient(to right, #f0e8e2 8%, #e6d9d0 18%, #f0e8e2 33%);
+    background-size: 800px 104px;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .skeleton-icon {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+  }
+
+  .skeleton-icon.small {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+  }
+
+  .skeleton-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .skeleton-line {
+    height: 13px;
+    border-radius: 7px;
+    background: linear-gradient(to right, #f0e8e2 8%, #e6d9d0 18%, #f0e8e2 33%);
+    background-size: 800px 104px;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  .skeleton-line.short { width: 55%; }
+  .skeleton-line.shorter { width: 35%; }
+
+  .skeleton-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .skeleton-num {
+    width: 32px; height: 22px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #f0e8e2 8%, #e6d9d0 18%, #f0e8e2 33%);
+    background-size: 800px 104px;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  .skeleton-badge {
+    width: 56px; height: 16px;
+    border-radius: 8px;
+    background: linear-gradient(to right, #f0e8e2 8%, #e6d9d0 18%, #f0e8e2 33%);
+    background-size: 800px 104px;
+    animation: shimmer 1.4s infinite linear;
+  }
+
+  /* ERROR STATE */
+  .error-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+  }
+  .error-state .emoji { font-size: 40px; margin-bottom: 12px; }
+  .error-state .err-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 6px;
+    font-family: 'Nunito', sans-serif;
+  }
+  .error-state .err-detail {
+    font-size: 11px;
+    margin-bottom: 16px;
+    opacity: 0.7;
+    word-break: break-all;
+  }
+  .retry-btn {
+    background: var(--core);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .retry-btn:hover { opacity: 0.85; }
 </style>
 </head>
 <body>
@@ -512,15 +616,15 @@
   </div>
   <div class="stats-strip">
     <div class="stat-pill">
-      <span class="num">63</span>
+      <span class="num" id="stat-total">—</span>
       <span class="lbl">материала</span>
     </div>
     <div class="stat-pill">
-      <span class="num">4</span>
+      <span class="num" id="stat-cats">—</span>
       <span class="lbl">рубрики</span>
     </div>
     <div class="stat-pill">
-      <span class="num">8</span>
+      <span class="num" id="stat-new">—</span>
       <span class="lbl">новинок</span>
     </div>
   </div>
@@ -535,62 +639,9 @@
 <div id="view-categories" class="view active">
   <div class="section-label">
     <h2>Выберите рубрику</h2>
-    <span>4 раздела</span>
+    <span id="cats-count-label">загрузка…</span>
   </div>
-  <div class="categories">
-
-    <div class="cat-card" onclick="openCategory('songs')">
-      <div class="cat-icon" style="background:#FDEEE8;">🎵</div>
-      <div class="cat-body">
-        <div class="cat-name">Песни</div>
-        <div class="cat-desc">Авторские и народные · аудио</div>
-      </div>
-      <div class="cat-right">
-        <div class="cat-count">27</div>
-        <div class="cat-count-label">материалов</div>
-        <span class="new-badge">+3 новых</span>
-      </div>
-    </div>
-
-    <div class="cat-card" onclick="openCategory('scenarios')">
-      <div class="cat-icon" style="background:#E8EFF2;">📋</div>
-      <div class="cat-body">
-        <div class="cat-name">Сценарии</div>
-        <div class="cat-desc">Праздники, занятия, утренники</div>
-      </div>
-      <div class="cat-right">
-        <div class="cat-count">18</div>
-        <div class="cat-count-label">материалов</div>
-        <span class="new-badge">+2 новых</span>
-      </div>
-    </div>
-
-    <div class="cat-card" onclick="openCategory('materials')">
-      <div class="cat-icon" style="background:#F5EDE8;">📄</div>
-      <div class="cat-body">
-        <div class="cat-name">Материалы</div>
-        <div class="cat-desc">Дидактика, карточки, шаблоны</div>
-      </div>
-      <div class="cat-right">
-        <div class="cat-count">12</div>
-        <div class="cat-count-label">материалов</div>
-      </div>
-    </div>
-
-    <div class="cat-card" onclick="openCategory('games')">
-      <div class="cat-icon" style="background:#FFF0E8;">🎮</div>
-      <div class="cat-body">
-        <div class="cat-name">Игры и разминки</div>
-        <div class="cat-desc">Физминутки, пальчиковые, логика</div>
-      </div>
-      <div class="cat-right">
-        <div class="cat-count">6</div>
-        <div class="cat-count-label">материалов</div>
-        <span class="new-badge">+3 новых</span>
-      </div>
-    </div>
-
-  </div>
+  <div class="categories" id="categories-container"></div>
 </div>
 
 <!-- VIEW: ALL MATERIALS -->
@@ -610,7 +661,7 @@
   </div>
   <div class="section-label">
     <h2>Все материалы</h2>
-    <span id="post-count">63 материала</span>
+    <span id="post-count">…</span>
   </div>
   <div class="posts-list" id="posts-container"></div>
 </div>
@@ -634,8 +685,8 @@
     </div>
   </div>
   <div class="section-label">
-    <h2 id="cat-title">Песни</h2>
-    <span id="cat-count">27 материалов</span>
+    <h2 id="cat-title">—</h2>
+    <span id="cat-count">…</span>
   </div>
   <div class="posts-list" id="cat-posts-container"></div>
 </div>
@@ -645,51 +696,218 @@
   <button class="subscribe-btn" onclick="handleSubscribe()">
     🎓 Оформить подписку — 260 ₽/мес
   </button>
-  <div class="subscribe-sub">Полный доступ ко всем 63 материалам</div>
+  <div class="subscribe-sub" id="subscribe-sub">Полный доступ ко всем материалам</div>
 </div>
 
 <script>
-// ---- MOCK DATA ----
-const POSTS = [
-  { id:1, title:'Песня «Мама» — 8 Марта', role:'main_song', file_type:'audio', tags:['#песня','#мама','#8марта'], created_at:'2025-03-05', source_link:'https://t.me/+example', isNew:true },
-  { id:2, title:'Масленица: народные гуляния', role:'main_song', file_type:'audio', tags:['#песня','#масленица','#народные'], created_at:'2025-02-28', source_link:'https://t.me/+example', isNew:true },
-  { id:3, title:'Топотушки — новогодняя', role:'main_song', file_type:'audio', tags:['#песня','#новыйгод','#топотушки'], created_at:'2025-01-10', source_link:'https://t.me/+example', isNew:false },
-  { id:4, title:'Песня на 8 марта для малышей', role:'main_song', file_type:'audio', tags:['#песня','#8марта','#мама'], created_at:'2025-03-01', source_link:'https://t.me/+example', isNew:true },
-  { id:5, title:'Частушки на Новый год', role:'main_song', file_type:'audio', tags:['#песня','#новыйгод','#частушки'], created_at:'2024-12-20', source_link:'https://t.me/+example', isNew:false },
-  { id:6, title:'Сценарий: зима и животные', role:'scenario', file_type:'document', tags:['#сценарий','#зима','#животные'], created_at:'2025-02-15', source_link:'https://t.me/+example', isNew:true },
-  { id:7, title:'Сценарий 23 февраля', role:'scenario', file_type:'document', tags:['#сценарий','#23февраля'], created_at:'2025-02-20', source_link:'https://t.me/+example', isNew:true },
-  { id:8, title:'Сценарий 8 марта для средней группы', role:'scenario', file_type:'document', tags:['#сценарий','#8марта'], created_at:'2025-03-03', source_link:'https://t.me/+example', isNew:true },
-  { id:9, title:'Занятие «Геометрические фигуры»', role:'scenario', file_type:'document', tags:['#сценарий','#занятие','#фигуры'], created_at:'2025-01-25', source_link:'https://t.me/+example', isNew:false },
-  { id:10, title:'Занятие «Счёт до 5»', role:'scenario', file_type:'document', tags:['#сценарий','#счет','#занятие'], created_at:'2025-01-30', source_link:'https://t.me/+example', isNew:false },
-  { id:11, title:'Дидактические карточки: буквы А-Е', role:'material', file_type:'document', tags:['#материал','#буквы','#дидактика'], created_at:'2024-12-10', source_link:'https://t.me/+example', isNew:false },
-  { id:12, title:'Шаблон родительского уголка', role:'material', file_type:'document', tags:['#материал','#шаблон'], created_at:'2025-02-05', source_link:'https://t.me/+example', isNew:false },
-  { id:13, title:'Физминутка «Зарядка с Мишкой»', role:'game', file_type:'audio', tags:['#игра','#разминка','#физминутка'], created_at:'2025-03-07', source_link:'https://t.me/+example', isNew:true },
-  { id:14, title:'Пальчиковая игра «Пальчики-друзья»', role:'game', file_type:'audio', tags:['#игра','#пальчиковая'], created_at:'2025-03-08', source_link:'https://t.me/+example', isNew:true },
-  { id:15, title:'Логическая игра «Найди пару»', role:'game', file_type:'photo', tags:['#игра','#логика'], created_at:'2025-03-06', source_link:'https://t.me/+example', isNew:true },
-];
+// ============================================================
+//  SUPABASE CONFIG — вставьте ваши данные здесь
+// ============================================================
+const SUPABASE_URL     = 'https://REPLACE_WITH_YOUR_PROJECT.supabase.co';
+const SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_ANON_KEY';
+const TABLE            = 'teacher_library';
+const NEW_DAYS         = 14;   // сколько дней считать «новым»
 
-const CAT_MAP = {
-  songs:     { title:'Песни',          roles:['main_song'], icon:'🎵' },
-  scenarios: { title:'Сценарии',       roles:['scenario'],  icon:'📋' },
-  materials: { title:'Материалы',      roles:['material'],  icon:'📄' },
-  games:     { title:'Игры и разминки',roles:['game'],      icon:'🎮' },
+// ============================================================
+//  МЕТА РУБРИК: role → отображаемые данные
+//  Добавьте свои роли, если будут новые
+// ============================================================
+const ROLE_META = {
+  main_song: { title: 'Песни',           icon: '🎵', iconBg: '#FDEEE8', desc: 'Авторские и народные · аудио' },
+  scenario:  { title: 'Сценарии',        icon: '📋', iconBg: '#E8EFF2', desc: 'Праздники, занятия, утренники' },
+  material:  { title: 'Материалы',       icon: '📄', iconBg: '#F5EDE8', desc: 'Дидактика, карточки, шаблоны' },
+  game:      { title: 'Игры и разминки', icon: '🎮', iconBg: '#FFF0E8', desc: 'Физминутки, пальчиковые, логика' },
 };
 
-const FILE_ICONS = { audio:'🎵', document:'📄', photo:'🖼️' };
-const FILE_COLORS = { audio:'#FDEEE8', document:'#E8EFF2', photo:'#F5EDE8' };
+const FILE_ICONS  = { audio: '🎵', document: '📄', photo: '🖼️' };
+const FILE_COLORS = { audio: '#FDEEE8', document: '#E8EFF2', photo: '#F5EDE8' };
 
-let currentCat = null;
+// ---- STATE ----
+let POSTS          = [];
+let currentCat     = null;
 let activeChipFilter = '';
-let currentView = 'categories';
+let currentView    = 'categories';
 
-function postHTML(p) {
-  const icon = FILE_ICONS[p.file_type] || '📎';
-  const bg = FILE_COLORS[p.file_type] || '#f5f5f5';
-  const tagsHTML = p.tags.slice(0,2).map(t => `<span class="tag-chip">${t}</span>`).join('');
-  const newBadge = p.isNew ? '<span class="post-new">NEW</span>' : '';
-  const date = new Date(p.created_at).toLocaleDateString('ru-RU', {day:'numeric', month:'short'});
+// ============================================================
+//  HELPERS
+// ============================================================
+function isNewPost(created_at) {
+  const diffMs = Date.now() - new Date(created_at).getTime();
+  return diffMs / (1000 * 60 * 60 * 24) <= NEW_DAYS;
+}
+
+function pluralMat(n) {
+  const mod10 = n % 10, mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return `${n} материалов`;
+  if (mod10 === 1) return `${n} материал`;
+  if (mod10 >= 2 && mod10 <= 4) return `${n} материала`;
+  return `${n} материалов`;
+}
+
+// ============================================================
+//  SKELETON
+// ============================================================
+function skeletonCatHTML() {
   return `
-    <div class="post-card" onclick="openPost('${p.source_link}')">
+    <div class="skeleton-card">
+      <div class="skeleton-block skeleton-icon"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line" style="width:70%"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+      <div class="skeleton-right">
+        <div class="skeleton-num"></div>
+        <div class="skeleton-badge"></div>
+      </div>
+    </div>`;
+}
+
+function skeletonPostHTML() {
+  return `
+    <div class="skeleton-card post">
+      <div class="skeleton-block skeleton-icon small"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line" style="width:80%"></div>
+        <div class="skeleton-line shorter"></div>
+      </div>
+    </div>`;
+}
+
+function showCatSkeleton() {
+  document.getElementById('categories-container').innerHTML =
+    Array(4).fill(0).map(skeletonCatHTML).join('');
+  document.getElementById('cats-count-label').textContent = 'загрузка…';
+}
+
+function showPostSkeleton(containerId, count = 5) {
+  const el = document.getElementById(containerId);
+  if (el) el.innerHTML = Array(count).fill(0).map(skeletonPostHTML).join('');
+}
+
+// ============================================================
+//  LOAD FROM SUPABASE
+// ============================================================
+async function loadFromSupabase() {
+  showCatSkeleton();
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/${TABLE}?select=*&order=created_at.desc`,
+      {
+        headers: {
+          'apikey':        SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type':  'application/json',
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+    }
+
+    const data = await res.json();
+
+    POSTS = data.map(p => ({
+      ...p,
+      tags:  Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
+      isNew: isNewPost(p.created_at),
+    }));
+
+    renderAll();
+
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+// ============================================================
+//  RENDER ALL
+// ============================================================
+function renderAll() {
+  const visible  = POSTS.filter(p => p.role !== 'cover');
+  const newCount = visible.filter(p => p.isNew).length;
+  const roles    = [...new Set(visible.map(p => p.role))];
+
+  // Stats strip
+  document.getElementById('stat-total').textContent = visible.length;
+  document.getElementById('stat-cats').textContent  = roles.length;
+  document.getElementById('stat-new').textContent   = newCount;
+
+  // Subscribe bar
+  document.getElementById('subscribe-sub').textContent =
+    `Полный доступ ко всем ${pluralMat(visible.length)}`;
+
+  renderCategories(roles, visible);
+
+  // If another tab was already open — refresh its content
+  if (currentView === 'all') {
+    renderPosts('posts-container', visible);
+    document.getElementById('post-count').textContent = pluralMat(visible.length);
+  } else if (currentView === 'new') {
+    renderPosts('new-container', visible.filter(p => p.isNew));
+  }
+}
+
+// ---- CATEGORIES ----
+function renderCategories(roles, posts) {
+  const container = document.getElementById('categories-container');
+  document.getElementById('cats-count-label').textContent = `${roles.length} разделов`;
+
+  if (!roles.length) {
+    container.innerHTML = `<div class="empty-state"><div class="emoji">📭</div><p>Материалы не найдены</p></div>`;
+    return;
+  }
+
+  container.innerHTML = roles.map((role, i) => {
+    const meta      = ROLE_META[role] || { title: role, icon: '📁', iconBg: '#f5f5f5', desc: '' };
+    const rolePosts = posts.filter(p => p.role === role);
+    const newInRole = rolePosts.filter(p => p.isNew).length;
+    const newBadge  = newInRole ? `<span class="new-badge">+${newInRole} новых</span>` : '';
+
+    return `
+      <div class="cat-card" onclick="openCategory('${role}')" style="animation-delay:${0.05 + i * 0.05}s">
+        <div class="cat-icon" style="background:${meta.iconBg}">${meta.icon}</div>
+        <div class="cat-body">
+          <div class="cat-name">${meta.title}</div>
+          <div class="cat-desc">${meta.desc}</div>
+        </div>
+        <div class="cat-right">
+          <div class="cat-count">${rolePosts.length}</div>
+          <div class="cat-count-label">материалов</div>
+          ${newBadge}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ---- ERROR ----
+function showError(message) {
+  document.getElementById('categories-container').innerHTML = `
+    <div class="error-state">
+      <div class="emoji">⚠️</div>
+      <p class="err-title">Не удалось загрузить данные</p>
+      <p class="err-detail">${message}</p>
+      <button class="retry-btn" onclick="loadFromSupabase()">Попробовать снова</button>
+    </div>`;
+  document.getElementById('cats-count-label').textContent = 'ошибка загрузки';
+  document.getElementById('stat-total').textContent = '—';
+  document.getElementById('stat-cats').textContent  = '—';
+  document.getElementById('stat-new').textContent   = '—';
+}
+
+// ============================================================
+//  POST RENDERING
+// ============================================================
+function postHTML(p) {
+  const icon      = FILE_ICONS[p.file_type]  || '📎';
+  const bg        = FILE_COLORS[p.file_type] || '#f5f5f5';
+  const tagsHTML  = p.tags.slice(0, 2).map(t => `<span class="tag-chip">${t}</span>`).join('');
+  const newBadge  = p.isNew ? '<span class="post-new">NEW</span>' : '';
+  const date      = new Date(p.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+  const link      = p.source_link || '#';
+  return `
+    <div class="post-card" onclick="openPost('${link}')">
       <div class="post-type-icon" style="background:${bg}">${icon}</div>
       <div class="post-info">
         <div class="post-title">${p.title}</div>
@@ -699,8 +917,8 @@ function postHTML(p) {
     </div>`;
 }
 
-function renderPosts(container, list) {
-  const el = document.getElementById(container);
+function renderPosts(containerId, list) {
+  const el = document.getElementById(containerId);
   if (!list.length) {
     el.innerHTML = `<div class="empty-state"><div class="emoji">🔍</div><p>Ничего не найдено</p></div>`;
     return;
@@ -708,11 +926,14 @@ function renderPosts(container, list) {
   el.innerHTML = list.map(postHTML).join('');
 }
 
+// ============================================================
+//  TAB SWITCHING
+// ============================================================
 function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 
-  ['categories','all','new'].forEach(v => {
+  ['categories', 'all', 'new'].forEach(v => {
     const view = document.getElementById(`view-${v}`);
     if (view) view.classList.remove('active');
   });
@@ -720,26 +941,39 @@ function switchTab(tab, el) {
   document.getElementById('view-category-detail').classList.remove('active');
   currentView = tab;
 
+  const visible = POSTS.filter(p => p.role !== 'cover');
+
   if (tab === 'all') {
-    renderPosts('posts-container', POSTS.filter(p => p.role !== 'cover'));
-    document.getElementById('post-count').textContent = `${POSTS.filter(p=>p.role!=='cover').length} материалов`;
+    if (!POSTS.length) {
+      showPostSkeleton('posts-container');
+    } else {
+      renderPosts('posts-container', visible);
+      document.getElementById('post-count').textContent = pluralMat(visible.length);
+    }
   }
+
   if (tab === 'new') {
-    const newPosts = POSTS.filter(p => p.isNew && p.role !== 'cover');
-    renderPosts('new-container', newPosts);
+    if (!POSTS.length) {
+      showPostSkeleton('new-container', 3);
+    } else {
+      renderPosts('new-container', visible.filter(p => p.isNew));
+    }
   }
 }
 
-function openCategory(catKey) {
-  currentCat = catKey;
-  const cat = CAT_MAP[catKey];
-  const filtered = POSTS.filter(p => cat.roles.includes(p.role));
+// ============================================================
+//  CATEGORY DETAIL
+// ============================================================
+function openCategory(role) {
+  currentCat    = role;
+  const meta    = ROLE_META[role] || { title: role, icon: '📁' };
+  const filtered = POSTS.filter(p => p.role === role);
 
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-category-detail').classList.add('active');
 
-  document.getElementById('cat-title').textContent = `${cat.icon} ${cat.title}`;
-  document.getElementById('cat-count').textContent = `${filtered.length} материалов`;
+  document.getElementById('cat-title').textContent     = `${meta.icon} ${meta.title}`;
+  document.getElementById('cat-count').textContent     = pluralMat(filtered.length);
   document.getElementById('cat-back-label').textContent = 'Все рубрики';
   renderPosts('cat-posts-container', filtered);
 }
@@ -748,20 +982,26 @@ function closeCategory() {
   document.getElementById('view-category-detail').classList.remove('active');
   document.getElementById('view-categories').classList.add('active');
   currentView = 'categories';
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===0));
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === 0));
 }
 
+// ============================================================
+//  SEARCH & FILTER
+// ============================================================
 function filterPosts(query) {
-  const q = query.toLowerCase();
-  let filtered = POSTS.filter(p => p.role !== 'cover');
-  if (activeChipFilter === 'new') filtered = filtered.filter(p => p.isNew);
-  else if (activeChipFilter) filtered = filtered.filter(p => p.file_type === activeChipFilter);
+  const q       = query.toLowerCase();
+  let filtered  = POSTS.filter(p => p.role !== 'cover');
+
+  if (activeChipFilter === 'new')       filtered = filtered.filter(p => p.isNew);
+  else if (activeChipFilter)            filtered = filtered.filter(p => p.file_type === activeChipFilter);
+
   if (q) filtered = filtered.filter(p =>
     p.title.toLowerCase().includes(q) ||
     p.tags.some(t => t.toLowerCase().includes(q))
   );
+
   renderPosts('posts-container', filtered);
-  document.getElementById('post-count').textContent = `${filtered.length} материалов`;
+  document.getElementById('post-count').textContent = pluralMat(filtered.length);
 }
 
 function filterByChip(el, filter) {
@@ -772,23 +1012,36 @@ function filterByChip(el, filter) {
 }
 
 function filterCatPosts(query) {
-  const q = query.toLowerCase();
-  const cat = CAT_MAP[currentCat];
-  let filtered = POSTS.filter(p => cat.roles.includes(p.role));
+  const q       = query.toLowerCase();
+  let filtered  = POSTS.filter(p => p.role === currentCat);
   if (q) filtered = filtered.filter(p =>
     p.title.toLowerCase().includes(q) ||
     p.tags.some(t => t.toLowerCase().includes(q))
   );
   renderPosts('cat-posts-container', filtered);
+  document.getElementById('cat-count').textContent = pluralMat(filtered.length);
 }
 
+// ============================================================
+//  ACTIONS
+// ============================================================
 function openPost(link) {
-  alert('→ Откроется в Telegram:\n' + link + '\n\n(В реальном приложении откроет канал)');
+  if (!link || link === '#') return;
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.openLink(link);
+  } else {
+    window.open(link, '_blank');
+  }
 }
 
 function handleSubscribe() {
   alert('→ Переход к оформлению подписки\n260 ₽/месяц · Полный доступ');
 }
+
+// ============================================================
+//  INIT
+// ============================================================
+loadFromSupabase();
 </script>
 </body>
 </html>
