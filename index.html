@@ -1011,8 +1011,9 @@ function postHTML(items) {
     return `<button class="file-btn" onclick="event.stopPropagation();openPost('${flink}')">${ficon} ${label}</button>`;
   }).join('');
 
+  const firstLink = (p.source_link || '').replace(/"/g, '&quot;');
   return `
-    <div class="post-card">
+    <div class="post-card" data-link="${firstLink}" onclick="openPost(this.dataset.link)">
       <div class="post-type-icon" style="background:${bg}">${icon}</div>
       <div class="post-info">
         <div class="post-title">${p.title}</div>
