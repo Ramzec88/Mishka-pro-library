@@ -818,6 +818,21 @@ async function loadFromSupabase() {
 
     const data = await res.json();
 
+    // Если пришёл пустой массив — скорее всего RLS без политики SELECT для anon
+    if (Array.isArray(data) && data.length === 0) {
+      showError(
+        'Таблица пуста или закрыта политиками RLS.\n' +
+        'Supabase Dashboard → Table Editor → teacher_library → RLS → ' +
+        'добавьте политику SELECT для роли anon.'
+      );
+      return;
+    }
+
+    // Если Supabase вернул объект с ошибкой (код 200 но тело — ошибка)
+    if (!Array.isArray(data)) {
+      throw new Error(data.message || data.hint || JSON.stringify(data));
+    }
+
     POSTS = data.map(p => ({
       ...p,
       tags:  Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
