@@ -1072,7 +1072,12 @@ function openPost(link) {
 }
 
 function handleSubscribe() {
-  alert('→ Переход к оформлению подписки\n260 ₽/месяц · Полный доступ');
+  const url = 'https://t.me/tribute/app?startapp=sHXL';
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.openLink(url);
+  } else {
+    window.open(url, '_blank');
+  }
 }
 
 // ============================================================
