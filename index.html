@@ -833,11 +833,14 @@ async function loadFromSupabase() {
       throw new Error(data.message || data.hint || JSON.stringify(data));
     }
 
-    POSTS = data.map(p => ({
-      ...p,
-      tags:  Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
-      isNew: isNewPost(p.created_at),
-    }));
+    const seen = new Set();
+    POSTS = data
+      .filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; })
+      .map(p => ({
+        ...p,
+        tags:  Array.isArray(p.tags) ? p.tags : (p.tags ? [p.tags] : []),
+        isNew: isNewPost(p.created_at),
+      }));
 
     renderAll();
 
@@ -1065,7 +1068,11 @@ function filterCatPosts(query) {
 function openPost(link) {
   if (!link) return;
   if (window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.openLink(link);
+    if (/^https?:\/\/(t\.me|telegram\.me)\//i.test(link)) {
+      window.Telegram.WebApp.openTelegramLink(link);
+    } else {
+      window.Telegram.WebApp.openLink(link);
+    }
   } else {
     window.open(link, '_blank');
   }
