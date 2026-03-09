@@ -930,9 +930,9 @@ function postHTML(p) {
   const tagsHTML  = p.tags.slice(0, 2).map(t => `<span class="tag-chip">${t}</span>`).join('');
   const newBadge  = p.isNew ? '<span class="post-new">NEW</span>' : '';
   const date      = new Date(p.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-  const link      = p.source_link || '#';
+  const link      = p.source_link || '';
   return `
-    <div class="post-card" onclick="openPost('${link}')">
+    <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link)">
       <div class="post-type-icon" style="background:${bg}">${icon}</div>
       <div class="post-info">
         <div class="post-title">${p.title}</div>
@@ -1063,7 +1063,7 @@ function filterCatPosts(query) {
 //  ACTIONS
 // ============================================================
 function openPost(link) {
-  if (!link || link === '#') return;
+  if (!link) return;
   if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.openLink(link);
   } else {
