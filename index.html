@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Кладовая педагога — Мишка Макс</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+  (function(m,e,t,r,i,k,a){
+    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=107375861','ym');
+  ym(107375861,'init',{ssr:true,webvisor:true,clickmap:true,ecommerce:'dataLayer',referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/107375861" style="position:absolute;left:-9999px;" alt=""/></div></noscript>
+<!-- /Yandex.Metrika counter -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1100,10 +1112,15 @@ function renderPosts(containerId, list) {
 // ============================================================
 //  TAB SWITCHING
 // ============================================================
+function ymEvent(goal, params) {
+  if (typeof ym !== 'undefined') ym(107375861, 'reachGoal', goal, params);
+}
+
 function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   const tabEl = el || document.querySelector(`.tab[onclick*="'${tab}'"]`);
   if (tabEl) tabEl.classList.add('active');
+  ymEvent('tab_switch', { tab });
 
   ['categories', 'all', 'new'].forEach(v => {
     const view = document.getElementById(`view-${v}`);
@@ -1140,6 +1157,7 @@ function switchTab(tab, el) {
 //  CATEGORY DETAIL
 // ============================================================
 function openCategory(role) {
+  ymEvent('open_category', { category: role });
   currentCat    = role;
   const meta    = ROLE_META[role] || { title: role, icon: '📁' };
   const filtered = POSTS.filter(p => p.role === role);
@@ -1211,6 +1229,7 @@ function filterCatPosts(query) {
 // ============================================================
 function openPost(link) {
   if (!link) return;
+  ymEvent('open_material', { url: link });
   if (window.Telegram && window.Telegram.WebApp) {
     if (/^https?:\/\/(t\.me|telegram\.me)\//i.test(link)) {
       window.Telegram.WebApp.openTelegramLink(link);
@@ -1223,6 +1242,7 @@ function openPost(link) {
 }
 
 function handleSubscribe() {
+  ymEvent('subscribe_click');
   const url = 'https://t.me/tribute/app?startapp=sHXL';
   if (window.Telegram && window.Telegram.WebApp) {
     window.Telegram.WebApp.openTelegramLink(url);
