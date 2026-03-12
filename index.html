@@ -1125,7 +1125,7 @@ function postHTML(items) {
   if (items.length === 1) {
     const link = p.source_link || '';
     return `
-      <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link,'${p.title.replace(/'/g,'&#39;')}')"
+      <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link,'${p.title.replace(/'/g,'&#39;')}','${(ROLE_META[p.role]?.title||p.role).replace(/'/g,'&#39;')}')"
            data-ym-content data-ym-title="${p.title.replace(/"/g,'&quot;')}"
            data-ym-category="${(ROLE_META[p.role]?.title || p.role)}"
            data-ym-published="${p.created_at.slice(0,10)}">
@@ -1143,12 +1143,13 @@ function postHTML(items) {
     const label  = fileBtnLabel(f, items);
     const flink  = (f.source_link || '').replace(/"/g, '&quot;');
     const ftitle = (p.title + ' — ' + label).replace(/'/g,'&#39;');
-    return `<button class="file-btn" onclick="event.stopPropagation();openPost('${flink}','${ftitle}')">${ficon} ${label}</button>`;
+    const fcat   = (ROLE_META[p.role]?.title || p.role).replace(/'/g,'&#39;');
+    return `<button class="file-btn" onclick="event.stopPropagation();openPost('${flink}','${ftitle}','${fcat}')">${ficon} ${label}</button>`;
   }).join('');
 
   const firstLink = (p.source_link || '').replace(/"/g, '&quot;');
   return `
-    <div class="post-card" data-link="${firstLink}" onclick="openPost(this.dataset.link,'${p.title.replace(/'/g,'&#39;')}')"
+    <div class="post-card" data-link="${firstLink}" onclick="openPost(this.dataset.link,'${p.title.replace(/'/g,'&#39;')}','${(ROLE_META[p.role]?.title||p.role).replace(/'/g,'&#39;')}')"
          data-ym-content data-ym-title="${p.title.replace(/"/g,'&quot;')}"
          data-ym-category="${(ROLE_META[p.role]?.title || p.role)}"
          data-ym-published="${p.created_at.slice(0,10)}">
@@ -1182,9 +1183,9 @@ function trackSearch(query) {
 }
 
 let openedMaterials = 0;
-function trackMaterialOpen(title) {
+function trackMaterialOpen(title, category) {
   openedMaterials++;
-  ymEvent('open_material', { title });
+  ym(107375861, 'reachGoal', 'open_material', { material: title, category: category || '' });
   if (openedMaterials === 5) ymEvent('power_user');
 }
 
@@ -1299,9 +1300,9 @@ function filterCatPosts(query) {
 // ============================================================
 //  ACTIONS
 // ============================================================
-function openPost(link, title) {
+function openPost(link, title, category) {
   if (!link) return;
-  trackMaterialOpen(title || link);
+  trackMaterialOpen(title || link, category);
   if (window.Telegram && window.Telegram.WebApp) {
     if (/^https?:\/\/(t\.me|telegram\.me)\//i.test(link)) {
       window.Telegram.WebApp.openTelegramLink(link);
