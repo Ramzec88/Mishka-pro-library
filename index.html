@@ -1071,7 +1071,10 @@ function postHTML(items) {
   if (items.length === 1) {
     const link = p.source_link || '';
     return `
-      <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link)">
+      <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link)"
+           data-ym-content data-ym-title="${p.title.replace(/"/g,'&quot;')}"
+           data-ym-category="${(ROLE_META[p.role]?.title || p.role)}"
+           data-ym-published="${p.created_at.slice(0,10)}">
         <div class="post-type-icon" style="background:${bg}">${icon}</div>
         <div class="post-info">
           <div class="post-title">${p.title}</div>
@@ -1090,7 +1093,10 @@ function postHTML(items) {
 
   const firstLink = (p.source_link || '').replace(/"/g, '&quot;');
   return `
-    <div class="post-card" data-link="${firstLink}" onclick="openPost(this.dataset.link)">
+    <div class="post-card" data-link="${firstLink}" onclick="openPost(this.dataset.link)"
+         data-ym-content data-ym-title="${p.title.replace(/"/g,'&quot;')}"
+         data-ym-category="${(ROLE_META[p.role]?.title || p.role)}"
+         data-ym-published="${p.created_at.slice(0,10)}">
       <div class="post-type-icon" style="background:${bg}">${icon}</div>
       <div class="post-info">
         <div class="post-title">${p.title}</div>
@@ -1120,7 +1126,7 @@ function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   const tabEl = el || document.querySelector(`.tab[onclick*="'${tab}'"]`);
   if (tabEl) tabEl.classList.add('active');
-  ymEvent('tab_switch', { tab });
+  if (typeof ym !== 'undefined') ym(107375861, 'hit', location.href, { title: tab });
 
   ['categories', 'all', 'new'].forEach(v => {
     const view = document.getElementById(`view-${v}`);
