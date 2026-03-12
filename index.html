@@ -109,6 +109,11 @@
     padding: 10px 14px;
     flex: 1;
     text-align: center;
+    transition: background .15s, transform .1s;
+  }
+  .stat-pill:active {
+    background: rgba(255,255,255,0.35);
+    transform: scale(0.96);
   }
 
   .stat-pill .num {
@@ -689,15 +694,15 @@
     </div>
   </div>
   <div class="stats-strip">
-    <div class="stat-pill">
+    <div class="stat-pill" onclick="switchTab('all')" style="cursor:pointer">
       <span class="num" id="stat-total">—</span>
       <span class="lbl" id="lbl-total">материалов</span>
     </div>
-    <div class="stat-pill">
+    <div class="stat-pill" onclick="switchTab('categories')" style="cursor:pointer">
       <span class="num" id="stat-cats">—</span>
       <span class="lbl" id="lbl-cats">рубрик</span>
     </div>
-    <div class="stat-pill">
+    <div class="stat-pill" onclick="switchTab('new')" style="cursor:pointer">
       <span class="num" id="stat-new">—</span>
       <span class="lbl" id="lbl-new">новинок</span>
     </div>
@@ -805,8 +810,8 @@ const ROLE_META = {
   game:      { title: 'Игры и разминки', icon: '🎮', iconBg: '#FFF0E8', desc: 'Физминутки, пальчиковые, логика' },
 };
 
-const FILE_ICONS  = { audio: '🎵', document: '📄', photo: '🖼️' };
-const FILE_COLORS = { audio: '#FDEEE8', document: '#E8EFF2', photo: '#F5EDE8' };
+const FILE_ICONS  = { audio: '🎵', document: '📄', photo: '🖼️', video: '🎬' };
+const FILE_COLORS = { audio: '#FDEEE8', document: '#E8EFF2', photo: '#F5EDE8', video: '#E8F0FD' };
 
 // ---- STATE ----
 let POSTS          = [];
@@ -1032,7 +1037,7 @@ function groupPosts(list) {
 }
 
 function fileBtnLabel(p, siblings) {
-  const typeLabels = { audio: 'Аудио', document: 'Текст', photo: 'Фото' };
+  const typeLabels = { audio: 'Аудио', document: 'Текст', photo: 'Фото', video: 'Видео' };
   const base = typeLabels[p.file_type] || p.file_type || 'Файл';
   const sameType = siblings.filter(s => s.file_type === p.file_type);
   if (sameType.length > 1) {
@@ -1096,7 +1101,8 @@ function renderPosts(containerId, list) {
 // ============================================================
 function switchTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
+  const tabEl = el || document.querySelector(`.tab[onclick*="'${tab}'"]`);
+  if (tabEl) tabEl.classList.add('active');
 
   ['categories', 'all', 'new'].forEach(v => {
     const view = document.getElementById(`view-${v}`);
