@@ -763,7 +763,7 @@
   <div class="search-wrap">
     <div class="search-box">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A2E4A" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" placeholder="Поиск по названию или тегу…" oninput="filterPosts(this.value)" />
+      <input type="text" placeholder="Поиск по названию или тегу…" oninput="filterPosts(this.value);trackSearch(this.value)" />
     </div>
   </div>
   <div class="chips-wrap">
@@ -795,7 +795,7 @@
   <div class="search-wrap">
     <div class="search-box">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A2E4A" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" placeholder="Поиск в рубрике…" oninput="filterCatPosts(this.value)" />
+      <input type="text" placeholder="Поиск в рубрике…" oninput="filterCatPosts(this.value);trackSearch(this.value)" />
     </div>
   </div>
   <div class="section-label">
@@ -817,6 +817,21 @@
 // ---- TELEGRAM INIT ----
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
+
+document.addEventListener('DOMContentLoaded', function () {
+  ym(107375861, 'reachGoal', 'telegram_open');
+
+  if (window.Telegram && Telegram.WebApp) {
+    const user = Telegram.WebApp.initDataUnsafe?.user;
+    if (user) {
+      ym(107375861, 'userParams', {
+        telegram_id: user.id,
+        first_name:  user.first_name,
+        username:    user.username
+      });
+    }
+  }
+});
 
 // ============================================================
 //  SUPABASE CONFIG — вставьте ваши данные здесь
@@ -1110,7 +1125,7 @@ function postHTML(items) {
   if (items.length === 1) {
     const link = p.source_link || '';
     return `
-      <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link)"
+      <div class="post-card" data-link="${link.replace(/"/g, '&quot;')}" onclick="openPost(this.dataset.link,'${p.title.replace(/'/g,'&#39;')}')"
            data-ym-content data-ym-title="${p.title.replace(/"/g,'&quot;')}"
            data-ym-category="${(ROLE_META[p.role]?.title || p.role)}"
            data-ym-published="${p.created_at.slice(0,10)}">
@@ -1127,12 +1142,13 @@ function postHTML(items) {
     const ficon  = FILE_ICONS[f.file_type] || '📎';
     const label  = fileBtnLabel(f, items);
     const flink  = (f.source_link || '').replace(/"/g, '&quot;');
-    return `<button class="file-btn" onclick="event.stopPropagation();openPost('${flink}')">${ficon} ${label}</button>`;
+    const ftitle = (p.title + ' — ' + label).replace(/'/g,'&#39;');
+    return `<button class="file-btn" onclick="event.stopPropagation();openPost('${flink}','${ftitle}')">${ficon} ${label}</button>`;
   }).join('');
 
   const firstLink = (p.source_link || '').replace(/"/g, '&quot;');
   return `
-    <div class="post-card" data-link="${firstLink}" onclick="openPost(this.dataset.link)"
+    <div class="post-card" data-link="${firstLink}" onclick="openPost(this.dataset.link,'${p.title.replace(/'/g,'&#39;')}')"
          data-ym-content data-ym-title="${p.title.replace(/"/g,'&quot;')}"
          data-ym-category="${(ROLE_META[p.role]?.title || p.role)}"
          data-ym-published="${p.created_at.slice(0,10)}">
@@ -1159,6 +1175,17 @@ function renderPosts(containerId, list) {
 // ============================================================
 function ymEvent(goal, params) {
   if (typeof ym !== 'undefined') ym(107375861, 'reachGoal', goal, params);
+}
+
+function trackSearch(query) {
+  if (query.length > 1) ymEvent('search', { query });
+}
+
+let openedMaterials = 0;
+function trackMaterialOpen(title) {
+  openedMaterials++;
+  ymEvent('open_material', { title });
+  if (openedMaterials === 5) ymEvent('power_user');
 }
 
 function switchTab(tab, el) {
@@ -1272,9 +1299,9 @@ function filterCatPosts(query) {
 // ============================================================
 //  ACTIONS
 // ============================================================
-function openPost(link) {
+function openPost(link, title) {
   if (!link) return;
-  ymEvent('open_material', { url: link });
+  trackMaterialOpen(title || link);
   if (window.Telegram && window.Telegram.WebApp) {
     if (/^https?:\/\/(t\.me|telegram\.me)\//i.test(link)) {
       window.Telegram.WebApp.openTelegramLink(link);
