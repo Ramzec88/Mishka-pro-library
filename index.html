@@ -17,6 +17,21 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/107375861" style="position:absolute;left:-9999px;" alt=""/></div></noscript>
 <!-- /Yandex.Metrika counter -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Кладовая педагога — Мишка Макс",
+  "description": "Материалы для занятий с детьми: песни, сценарии, игры, дидактика",
+  "url": "https://t.me/helper_vospitatel_bot",
+  "author": {
+    "@type": "Person",
+    "name": "Мишка Макс"
+  },
+  "inLanguage": "ru"
+}
+</script>
+<script type="application/ld+json" id="ld-content"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -956,6 +971,29 @@ async function loadFromSupabase() {
 // ============================================================
 //  RENDER ALL
 // ============================================================
+function updateJsonLd(posts) {
+  const el = document.getElementById('ld-content');
+  if (!el) return;
+  el.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Материалы для педагогов",
+    "numberOfItems": posts.length,
+    "itemListElement": posts.map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "Article",
+        "headline": p.title,
+        "datePublished": p.created_at.slice(0, 10),
+        "articleSection": ROLE_META[p.role]?.title || p.role,
+        "keywords": (p.tags || []).join(', '),
+        "url": p.source_link || ''
+      }
+    }))
+  });
+}
+
 function renderAll() {
   const visible  = POSTS.filter(p => p.role !== 'cover');
   const newCount = visible.filter(p => p.isNew).length;
@@ -973,6 +1011,7 @@ function renderAll() {
   document.getElementById('subscribe-sub').textContent =
     `Полный доступ ко всем ${pluralMat(visible.length)}`;
 
+  updateJsonLd(visible);
   renderCategories(roles, visible);
 
   // If another tab was already open — refresh its content
